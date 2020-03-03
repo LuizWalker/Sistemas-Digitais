@@ -1,0 +1,7 @@
+entity testbench is
+end testbench;
+
+architecture test of testbench is
+begin
+
+end test;
