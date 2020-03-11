@@ -1,0 +1,13 @@
+entity selectAdder is
+
+port(a,b: in bit_vector(3 downto 0);
+     s: out bit_vector(3 downto0);
+	  cin: in bit;
+	  cout: out bit);
+	  
+end selectAdder;
+
+architecture CSonepointsix of selectAdder is
+begin
+
+end CSonepointsix;
