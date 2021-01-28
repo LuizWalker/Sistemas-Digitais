@@ -1,0 +1,113 @@
+-- Code your design here
+-- Code your design here
+
+-- Como tá funcionando: está multiplicando os números, tanto positivos quanto negativo.
+--                      o programa está considerando o bit mais a esquerda como o bit sinal
+--                      e está seguindo as regras da multiplicação em binário
+--                      por exemplo: no caso de "1011" o programa faz o complemento de 2 e fica "0101" e após isso multiplica
+-- no vetor resposta, caso seja negativa, o código está colocando um "1" adicional mais à esquerda para sero bit sinal, caso a resposta seja positiva, nada é adicionado mais à esquerda.
+
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity multiplicador_vector is
+
+port(X,Y: in bit_vector(3 downto 0);
+     R: out bit_vector(7 downto 0));
+
+end multiplicador_vector;
+
+architecture multi of multiplicador_vector is
+
+signal C1: bit_vector(12 downto 0);
+signal S1: bit_vector(12 downto 0);
+signal XY1, XY2, XY3, XY4: bit_vector(3 downto 0);
+
+component somador1bit is
+
+port(X,Y,cin: in bit;
+     cout,s: out bit);
+     
+end component;
+
+component meiosomador is
+
+port(X,Y: in bit;
+     cout,s: out bit);
+	  
+end component;
+
+begin
+
+XY1(0) <= X(0) and Y(0);
+XY1(1) <= X(1) and Y(0); -- Bloco da primeira parte do diagrama
+XY1(2) <= X(2) and Y(0);
+XY1(3) <= not(X(3) and Y(0));
+
+XY2(0) <= X(0) and Y(1);
+XY2(1) <= X(1) and Y(1);  -- Bloco da segunda parte do diagrama
+XY2(2) <= X(2) and Y(1);
+XY2(3) <= not(X(3) and Y(1));
+
+XY3(0) <= X(0) and Y(2);
+XY3(1) <= X(1) and Y(2); -- Bloco da terceira parte do diagrama
+XY3(2) <= X(2) and Y(2);
+XY3(3) <= not(X(3) and Y(2));
+
+XY4(0) <= not(X(0) and Y(3));
+XY4(1) <= not(X(1) and Y(3)); -- Bloco da quarta parte do diagrama
+XY4(2) <= not(X(2) and Y(3));
+XY4(3) <= X(3) and Y(3); 
+
+-- Bloco da segunda parte do diagrama
+
+halfadder1: meiosomador port map (XY2(0), XY1(1), C1(0), S1(0));
+
+fulladder1: somador1bit port map (XY2(1), XY1(2), C1(0), C1(1), S1(1));
+
+fulladder2: somador1bit port map (XY2(2), XY1(3), C1(1), C1(2), S1(2));
+
+fulladder3: somador1bit port map ('1', XY2(3), C1(2), C1(3), S1(3));
+
+-- Bloco da terceira parte do diagrama
+
+halfadder2: meiosomador port map (XY3(0), S1(1), C1(4), S1(4));
+
+fulladder4: somador1bit port map (XY3(1), S1(2), C1(4), C1(5), S1(5));
+
+fulladder5: somador1bit port map (XY3(2), S1(3), C1(5), C1(6), S1(6));
+
+fulladder6: somador1bit port map (XY3(3), C1(3), C1(6), C1(7), S1(7));
+
+-- Bloco da quarta parte do diagrama
+
+halfadder3: meiosomador port map (XY4(0), S1(5), C1(8), S1(8));
+
+fulladder7: somador1bit port map (XY4(1), S1(6), C1(8), C1(9), S1(9));
+
+fulladder8: somador1bit port map (XY4(2), S1(7), C1(9), C1(10), S1(10));
+
+fulladder9: somador1bit port map (XY4(3), C1(7), C1(10), C1(11), S1(11));
+
+halfadder4: meiosomador port map ('1', C1(11), C1(12), S1(12));
+
+-- Montagem do vetor solução
+
+R(0)<= XY1(0);
+
+R(1)<= S1(0);
+
+R(2)<= S1(4);
+
+R(3)<= S1(8);
+
+R(4)<= S1(9);
+
+R(5)<= S1(10);
+
+R(6)<= S1(11);
+
+R(7)<= S1(12);
+
+
+end multi;
