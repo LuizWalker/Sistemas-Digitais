@@ -1,0 +1,20 @@
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+-- meio somador
+
+entity meiosomador is
+
+port(X,Y: in bit;
+     cout,s: out bit);
+	  
+end meiosomador;
+
+architecture pelametade of meiosomador is
+
+begin
+
+s <= X xor Y;
+cout <= X and Y;
+
+end pelametade;
