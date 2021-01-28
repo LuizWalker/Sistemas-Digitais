@@ -1,0 +1,38 @@
+-- Code your testbench here
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity testbench is
+end testbench;
+
+architecture test of testbench is
+
+component multiplicador_vector is
+
+ port(X,Y: in bit_vector(3 downto 0);
+      R: out bit_vector(7 downto 0));
+      
+end component;
+
+signal X,Y: bit_vector(3 downto 0);
+signal R: bit_vector(7 downto 0);
+
+begin
+
+dut: multiplicador_vector port map(X, Y, R);
+
+X <= "0000",
+     "0110" after 10 ns,
+     "1100" after 20 ns,
+     "1110" after 30 ns,
+     "0100" after 40 ns;
+     
+Y <= "0000",
+     "0010" after 10 ns,
+     "1100" after 20 ns,
+     "0010" after 30 ns,
+     "1000" after 40 ns;
+
+
+
+end test;
