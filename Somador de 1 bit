@@ -1,0 +1,19 @@
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+-- somador completo
+
+entity somador1bit is
+port(X,Y,cin: in bit;
+     cout,s: out bit);
+end somador1bit;
+
+architecture cumbuca of somador1bit is
+signal valor: bit;
+begin
+
+valor <= X xor Y;
+s <= cin xor valor;
+cout <= (X and Y) or (cin and valor);
+
+end cumbuca;
